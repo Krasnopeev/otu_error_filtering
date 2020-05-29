@@ -1,11 +1,4 @@
-library(vegan)
-library(reshape2)
 library(plyr)
-library(cluster)
-library(NbClust)
-library(DescTools)
-library(pvclust)
-library(latticeExtra)
 
 source("http://peterhaschke.com/Code/multiplot.R")
 
