@@ -1,6 +1,9 @@
 
 #Here is a common workflow example
 
+#At first we need to pass our function to the R
+source("C:\\path_to_file\\main_fin.r")
+
 #Input *.shared file from mothur
 data <- read.table("shared.shared", header=TRUE, sep="\t")
 # little modify of shared file from mothur
