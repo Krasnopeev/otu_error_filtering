@@ -1,0 +1,72 @@
+
+#Here is a common workflow example
+
+#Input *.shared file from mothur
+data <- read.table("shared.shared", header=TRUE, sep="\t")
+# little modify of shared file from mothur
+# for further work you just need an OTU table where rows are OTUs and columns are Samples
+rownames(data) <- data$Group
+data <- as.data.frame(t(data[,-c(1:3)]))
+
+#Generate a subsampled dataset with size of 15000 reads per sample
+ndt <- getSub(data, value=1, cutoff=2, subsample=FALSE, subsize=15000)
+
+
+# создаём список с otus для каждого образца
+# generate list of OTUs for each sample
+
+otu_list <- list()
+for (i in names(ndt)){ otu_list[[i]] <- getOtuSample(ndt[i], trimmedby=0); print(i); flush.console() }
+
+# создаём реплики otus Для каждого образца
+# generate replics of OTUs for each sample
+rep_list <- vector("list", length(names(otu_list)))
+names(rep_list) <- names(otu_list)
+
+for (j in names(otu_list))
+{  
+    print(j); flush.console()
+    rep_list[[j]] <- getReplica(otu_list[[j]], n=1000, scaling="int")
+}
+
+# вычисляем относительную ошибку для наших выборок
+# estimate relative error for OTUs
+ErrorsList <- vector("list", length(names(otu_list)))
+
+names(ErrorsList) <- names(otu_list)
+
+for(i in names(rep_list))
+{
+    ErrorsList[[i]] <- as.data.frame(t(repError(rep_list[i], rate=0.2)))
+}
+
+n <- summary(ErrorsList)
+m <- summary(otu_list)
+
+
+OtuNames <- c()
+
+for (i in names(ErrorsList))
+{
+    OtuNames <- c(OtuNames, names(ErrorsList[[i]]))
+}
+
+uniqOtuNames <- sort(unique(OtuNames), decreasing=F)
+
+#generating reliable OTU table
+
+newOtuTable <- data.frame(otu=uniqOtuNames, stringsAsFactors=FALSE)
+
+OtuNames <- c()
+for (i in names(ErrorsList))
+	{
+		OtuNames <-names(ErrorsList[[i]])
+		xf <- data.frame(ndt[OtuNames, i, drop=FALSE], otu=OtuNames)
+		newOtuTable <- merge(newOtuTable, xf, by="otu", all=TRUE)
+	}
+newOtuTable[is.na(newOtuTable)] <- 0
+rownames(newOtuTable) <- newOtuTable$otu
+newOtuTable <- newOtuTable[-1]
+
+#Write to disk new OTU table with filtered data
+write.table(newOtuTable, "newOtuTable.txt", sep='\t', col.names=TRUE, quote=FALSE)
