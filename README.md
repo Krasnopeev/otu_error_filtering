@@ -54,6 +54,7 @@ for (j in names(otu_list))
 ```
 
 estimate relative error for OTUs. Feel free to try different rate value less or more. The deafault error `rate` value is `0.2`.
+After filtering all error values higher than `rate` will be replaced with `1`.
 
 ```R
 ErrorsList <- vector("list", length(names(otu_list)))
