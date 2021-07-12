@@ -4,6 +4,8 @@ if (!require("tidyverse")) install.packages("tidyverse")
 library(plyr)
 library(tidyverse)
 
+source("http://peterhaschke.com/Code/multiplot.R")
+
 #getSub - функция позволяет получить заданную процентную выборку OTUs.
 #На вход подаётся таблица otu. Строки - otu, колонки - samples
 #getSub function generates subsample by percentile or by sample size.
@@ -42,9 +44,9 @@ getSub <- function(data, value=0.95, cutoff=1, subsample=FALSE, subsize=NULL) {
         res[is.na(res)]<-0
         rownames(res)<-res$Var1
         res <- res[-1]
-        print("Number of Otus for each sample:")
+        print("Number of Otus per sample:")
         print(colSums(res !=0))
-        print("Number of seqs for each sample:")
+        print("Number of seqs per sample:")
         print(colSums(res))
         
     }
@@ -156,5 +158,4 @@ repError <- function(data, rate = 0.2)
     out <- out[c("otuid", setName)]
 	return(out)
 }
-
 
