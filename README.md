@@ -14,7 +14,7 @@ data <- read.table("shared.shared", header=TRUE, sep="\t")
 ```
 
 little modify of shared file from mothur
-#for further work you just need an OTU table where rows are OTUs and columns are Samples
+for further work you just need an OTU table where rows are OTUs and columns are Samples
 
 ```R
 rownames(data) <- data$Group
@@ -28,7 +28,7 @@ Generating a subsampled dataset with `cutoff` - trimm single an doubletons (you 
 ndt <- getSub(data, value=1, cutoff=2, subsample=FALSE, subsize=15000)
 ```
 
-#generating OTUs list for each sample
+generating OTUs list for each sample
 
 ```R
 otu_list <- list()
