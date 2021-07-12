@@ -71,34 +71,22 @@ OtuErrorTable <- reduce(ErrorsList, full_join, by = "otuid") %>% replace(., is.n
 Generating new OTU table with reliable values
 
 ```R
-OtuNames <- c()
 
-for (i in names(ErrorsList))
+NewOtuList <- vector("list", length(names(otu_list)))
+
+names(NewOtuList) <- names(otu_list)
+
+for(i in names(ErrorsList))
   {
-    OtuNames <- c(OtuNames, names(ErrorsList[[i]]))
+    OtuNames <-rownames(ErrorsList[[i]])
+    NewOtuList[[i]] <- data.frame(otuid=OtuNames, ndt[OtuNames, i, drop=FALSE])
   }
 
-uniqOtuNames <- sort(unique(OtuNames), decreasing=F)
+newOtuTable <- reduce(NewOtuList, full_join, by = "otuid") %>% replace(., is.na(.), 0);
 
-newOtuTable <- data.frame(otu=uniqOtuNames, stringsAsFactors=FALSE)
-
-OtuNames <- c()
-
-for (i in names(ErrorsList))
-	{
-		OtuNames <-names(ErrorsList[[i]])
-		xf <- data.frame(ndt[OtuNames, i, drop=FALSE], otu=OtuNames)
-		newOtuTable <- merge(newOtuTable, xf, by="otu", all=TRUE)
-	}
-
-newOtuTable[is.na(newOtuTable)] <- 0
-
-rownames(newOtuTable) <- newOtuTable$otu
-
-newOtuTable <- newOtuTable[-1]
 ```
 
-Write to disk new OTU table with filtered data
+Write to disk new OTU table
 
 ```R
 write.table(newOtuTable, "newOtuTable.txt", sep='\t', col.names=TRUE, quote=FALSE)
