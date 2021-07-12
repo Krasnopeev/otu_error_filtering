@@ -1,8 +1,8 @@
 if (!require("plyr")) install.packages("plyr")
+if (!require("tidyverse")) install.packages("tidyverse")
 
 library(plyr)
-
-source("http://peterhaschke.com/Code/multiplot.R")
+library(tidyverse)
 
 #getSub - функция позволяет получить заданную процентную выборку OTUs.
 #На вход подаётся таблица otu. Строки - otu, колонки - samples
