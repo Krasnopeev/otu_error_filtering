@@ -152,6 +152,9 @@ repError <- function(data, rate = 0.2)
 		}
 	out <- V[V[,1] <= rate,,drop=FALSE]
 	names(out)<-setName
+    out$otuid <- rownames(out)
+    out <- out[c("otuid", setName)]
 	return(out)
 }
+
 
