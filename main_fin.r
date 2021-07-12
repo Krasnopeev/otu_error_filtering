@@ -1,3 +1,5 @@
+if (!require("plyr")) install.packages("plyr")
+
 library(plyr)
 
 source("http://peterhaschke.com/Code/multiplot.R")
