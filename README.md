@@ -65,6 +65,12 @@ for(i in names(rep_list))
     ErrorsList[[i]] <- as.data.frame(t(repError(rep_list[i], rate=0.2)))
   }
 
+OtuErrorTable <- reduce(ErrorsList, full_join, by = "otuid") %>% replace(., is.na(.), 1);
+```
+
+Generating new OTU table with reliable values
+
+```R
 OtuNames <- c()
 
 for (i in names(ErrorsList))
@@ -73,11 +79,7 @@ for (i in names(ErrorsList))
   }
 
 uniqOtuNames <- sort(unique(OtuNames), decreasing=F)
-```
 
-Generating new OTU table with reliable values
-
-```R
 newOtuTable <- data.frame(otu=uniqOtuNames, stringsAsFactors=FALSE)
 
 OtuNames <- c()
