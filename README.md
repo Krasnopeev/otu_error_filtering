@@ -7,13 +7,13 @@ At first we need to load our function to the R
 source("C:\\path_to_file\\main_fin.r")
 ```
 
-#Input *.shared file from mothur
+Input *.shared file from mothur
 
 ```R
 data <- read.table("shared.shared", header=TRUE, sep="\t")
 ```
 
-#little modify of shared file from mothur
+little modify of shared file from mothur
 #for further work you just need an OTU table where rows are OTUs and columns are Samples
 
 ```R
