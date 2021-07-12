@@ -1,7 +1,7 @@
 # otu_error_filtering is an algorithm for estimate of OTU's representation relative error. 
 Here is a common workflow example
 
-#At first we need to load our function to the R
+At first we need to load our function to the R
 
 ```R
 source("C:\\path_to_file\\main_fin.r")
