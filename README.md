@@ -69,7 +69,7 @@ for(i in names(rep_list))
 OtuErrorTable <- reduce(ErrorsList, full_join, by = "otuid") %>% replace(., is.na(.), 1);
 ```
 
-Generating new OTU table with reliable values. OTU values which estimated error rates were higher than values in OtuErrorTable will be replaced with `0`.
+Generating new OTU table with reliable values. OTU values which estimated error rates were higher than values in `OtuErrorTable` will be replaced with `0`.
 
 ```R
 
