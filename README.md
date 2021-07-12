@@ -39,7 +39,7 @@ for (i in names(ndt))
   }
 ```
 
-generating OTUs replicas for each sample
+generating OTUs replicas for each sample via bootstrapping of OTU vectors from `otu_list`
 
 ```R
 rep_list <- vector("list", length(names(otu_list)))
