@@ -158,7 +158,7 @@ repError <- function(data, rate = 0.2, filterErorr=TRUE, p=0.95)
     out <- data.frame()
 	
     plow <- (1-p)/2
-    phi <- p+plow
+    phi <- (p+1)/2
     
     quantileMatrix <- apply(x, 2, quantile, probs = c(plow,phi))
 	
