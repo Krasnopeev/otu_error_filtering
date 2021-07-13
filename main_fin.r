@@ -145,7 +145,7 @@ getReplica <- function(OtuVector, n = 1000, scaling="int")
 #rate - error threshold
 #filterErorr -True\False for filtering data by 'rate'. All NA elements will be replaced in 1.
 
-repError <- function(data, rate = 0.2, filterErorr=TRUE)
+repError <- function(data, rate = 0.2, filterErorr=TRUE, p=0.95)
 {
 	setName <- names(data)
 	x <- data[[1]]
@@ -157,7 +157,10 @@ repError <- function(data, rate = 0.2, filterErorr=TRUE)
     Vmin <- data.frame()
     out <- data.frame()
 	
-    quantileMatrix <- apply(x, 2, quantile, probs = c(0.025,0.975))
+    plow <- (1-p)/2
+    phi <- p+plow
+    
+    quantileMatrix <- apply(x, 2, quantile, probs = c(plow,phi))
 	
     for (i in 1:ncol(quantileMatrix))
 		{
