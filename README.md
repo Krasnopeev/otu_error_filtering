@@ -53,20 +53,31 @@ for (j in names(otu_list))
   }
 ```
 
-estimate relative error for OTUs. Feel free to try different rate value less or more. The deafault error `rate` value is `0.2`.
-After filtering all error values higher than `rate` will be replaced with `1`.
+Estimate relative error for OTUs. Feel free to try different `rate` values. The deafault error `rate` value is `0.2`.
+For `repError` function In case if `filterErorr=TRUE` all error values higher than `rate` will be dropped and missed values replaced with `1`. You can skip filtering step by using `filterErorr=FALSE` and take a look at final result without error filtering.
+Moreover you can look at `VmaxTable` and `VminTable` which are contain maximum and minimum values of OTU abundance after bootstrapping procedure. Values in these tables are converted to percent.
 
 ```R
+
 ErrorsList <- vector("list", length(names(otu_list)))
+VmaxList <- vector("list", length(names(otu_list)))
+VminList <- vector("list", length(names(otu_list)))
 
 names(ErrorsList) <- names(otu_list)
+names(VmaxList) <- names(otu_list)
+names(VminList) <- names(otu_list)
 
 for(i in names(rep_list))
   {
-    ErrorsList[[i]] <- as.data.frame(t(repError(rep_list[i], rate=0.2)))
+    ErrorsList[[i]] <- as.data.frame((repError(rep_list[i], rate=0.2, filterErorr=FALSE)$error))
+    VmaxList[[i]] <- as.data.frame((repError(rep_list[i], rate=0.2, filterErorr=FALSE)$Vmax))
+    VminList[[i]] <- as.data.frame((repError(rep_list[i], rate=0.2, filterErorr=FALSE)$Vmin))
   }
 
 OtuErrorTable <- reduce(ErrorsList, full_join, by = "otuid") %>% replace(., is.na(.), 1);
+VmaxTable <- reduce(VmaxList, full_join, by = "otuid") %>% replace(., is.na(.), 1);
+VminTable <- reduce(VminList, full_join, by = "otuid") %>% replace(., is.na(.), 1);
+
 ```
 
 Generating new OTU table with reliable values. OTU values which estimated error rates were higher than values in `OtuErrorTable` will be replaced with `0`.
