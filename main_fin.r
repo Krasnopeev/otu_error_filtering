@@ -140,22 +140,60 @@ getReplica <- function(OtuVector, n = 1000, scaling="int")
 
 #вычисляем относительную ошибку для наших выборок
 #на вход элемент списка rep_list[i]
-#estimate relative error. Enter rep_list[i]
-repError <- function(data, rate = 0.2)
+#estimate relative error.
+#data - rep_list[i]
+#rate - error threshold
+#filterErorr -True\False for filtering data by 'rate'. All NA elements will be replaced in 1.
+
+repError <- function(data, rate = 0.2, filterErorr=TRUE)
 {
 	setName <- names(data)
 	x <- data[[1]]
-	V <- data.frame()
-	quantileMatrix <- apply(x, 2, quantile, probs = c(0.025,0.975))
-	for (i in 1:ncol(quantileMatrix))
+    y <- prop.table(as.matrix(x), margin=1)*100
+	
+    V <- data.frame()
+    D <- data.frame()
+    Vmax <- data.frame()
+    Vmin <- data.frame()
+    out <- data.frame()
+	
+    quantileMatrix <- apply(x, 2, quantile, probs = c(0.025,0.975))
+	
+    for (i in 1:ncol(quantileMatrix))
 		{
-			D <- quantileMatrix[, i, drop=FALSE]
-			V <- rbind(V, data.frame(set=((max(D)-min(D))/max(D)), row.names=colnames(D)))
+			V <- quantileMatrix[,i, drop=FALSE]
+			D <- rbind(D, data.frame(set=((max(V)-min(V))/max(V)), row.names=colnames(V)))
+            Vmax <- rbind(Vmax, data.frame(Vmax=max(y[,i]), row.names=colnames(V)))
+            Vmin <- rbind(Vmin, data.frame(Vmin=min(y[,i]), row.names=colnames(V)))
 		}
-	out <- V[V[,1] <= rate,,drop=FALSE]
-	names(out)<-setName
+	
+    if(filterErorr == TRUE) {
+            out <- D[D <= rate,,drop=FALSE]
+    } else {
+            out <- D
+    }
+
+    Vmax <- Vmax[rownames(out),,drop=FALSE]
+    Vmin <- Vmin[rownames(out),,drop=FALSE]
+	
+    names(out)<-setName
+    names(Vmax)<-setName
+    names(Vmin)<-setName
+    
     out$otuid <- rownames(out)
+    Vmax$otuid <- rownames(Vmax)
+    Vmin$otuid <- rownames(Vmin)
+    
     out <- out[c("otuid", setName)]
-	return(out)
+    Vmax <- Vmax[c("otuid", setName)]
+    Vmin <- Vmin[c("otuid", setName)]
+    
+    print(head(out));print(nrow(out))
+    print(head(Vmax));print(nrow(Vmax))
+    print(head(Vmin));print(nrow(Vmin))
+    
+    listout <- list(error=out, Vmax=Vmax, Vmin=Vmin)
+    return(listout)
 }
+
 
