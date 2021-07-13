@@ -4,8 +4,6 @@ if (!require("tidyverse")) install.packages("tidyverse")
 library(plyr)
 library(tidyverse)
 
-source("http://peterhaschke.com/Code/multiplot.R")
-
 #getSub - функция позволяет получить заданную процентную выборку OTUs.
 #На вход подаётся таблица otu. Строки - otu, колонки - samples
 #getSub function generates subsample by percentile or by sample size.
