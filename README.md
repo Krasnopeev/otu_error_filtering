@@ -1,6 +1,11 @@
 # otu_error_filtering is an algorithm for estimate of OTU's representation relative error. 
-Here is a common workflow example
+This pipeline using for analysis of high throughput sequencing data, where is final result is an abundance table. For example common used OTU table. With this tool you can filter your dataset based on relative error of OTU representation in abundance table.
+# installing dependent packages
+You need to install `plyr` and `tidyverse` from R repo
+```R
+install.packages(c("plyr", "tidyverse"))
 
+```
 At first we need to load our function to the R
 
 ```R
